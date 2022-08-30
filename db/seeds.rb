@@ -24,6 +24,7 @@ end
     Article.create!(
         title: Faker::TvShows::RickAndMorty.quote,
         content: Faker::Lorem.paragraph(sentence_count: 15),
-        user_id: User.last.id
+        user_id: User.last.id,
+        private: false
     )
 end

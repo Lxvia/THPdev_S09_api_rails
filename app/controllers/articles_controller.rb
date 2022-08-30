@@ -2,6 +2,7 @@ class ArticlesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_article, only: [:show, :update, :destroy]
   before_action :check_id, only: [:update, :destroy]
+  before_action :check_private, only: [:show]
 
   # GET /articles
   def index
@@ -49,10 +50,14 @@ class ArticlesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def article_params
-      params.require(:article).permit(:title, :content)
+      params.require(:article).permit(:title, :content, :private)
     end
 
     def check_id
-      render json: {message: "Unauthorized!"}, status: :unauthorized unless current_user == @article.user
+      render json: {message: "Unauthorized! Only the author can do that"}, status: :unauthorized unless current_user == @article.user
+    end
+
+    def check_private
+      render json: {message: "This is a private article, you must be the author to see it!"}, status: :unauthorized unless current_user == @article.user
     end
 end
